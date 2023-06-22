@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import { User } from "../types";
 
 const Container = styled.div`
   width: 100vw;
@@ -50,19 +51,6 @@ const LinkContainer = styled.div`
   cursor: pointer;
 `;
 
-
-type cookies = {
-  id:number,
-  count:number,
-}
-
-type User = {
-  name:string,
-  password: string,
-  alergens: string[],
-  cookies: cookies[], 
-}
-
 const AllUsers:User[] = JSON.parse(localStorage.getItem("AllUsers") || "[]");
 
 
@@ -75,7 +63,8 @@ const Login = () => {
     var EmptyInput = false;
     var WrongPassword = false;
     var UserID = -1;
-  
+    var WrongName = true;
+
     for(let i = 0; i < 2; i++)
     {
       if(inputs[i].value == '')
@@ -84,9 +73,21 @@ const Login = () => {
         break;
       }
     }
+    for(let i = 0; i < AllUsers.length; i++)
+    {
+      if(inputs[0].value == AllUsers[i].name)
+      {
+        WrongName = false;
+        break;
+      }
+    }
     if(EmptyInput)
     {
       alert("Пожалуйста введите все данные")
+    }
+    else if(WrongName)
+    {
+      alert("Такого пользователя не существует")
     }
     else
     {

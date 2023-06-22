@@ -1,6 +1,6 @@
 import cookie from '../src/assets/cookie.png'
 
-export const cookies = [
+export const cookiesArray = [
     {
       id:1,
       img: cookie,

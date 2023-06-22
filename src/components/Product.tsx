@@ -4,7 +4,10 @@ import {
     ShoppingCartOutlined,
   } from "@material-ui/icons";
   import styled from "styled-components";
-  
+  import { User } from "../types";
+  import { addToCart } from "../slices/cartSlice";
+  import { useDispatch } from "react-redux";
+
   const Info = styled.div`
     opacity: 0;
     width: 100%;
@@ -34,23 +37,7 @@ import {
   &:hover ${Info}{
     opacity: 1;
   }
-    background-color: #FFCCCB;
-  `;
-
-  const NotAlergic = styled.div`
-  flex-direction: column;
-  flex: 1;
-  margin: 5px;
-  min-width: 280px;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  &:hover ${Info}{
-    opacity: 1;
-  }
-    background-color: #f5fbfd;
+    background-color: ${props => props.color || '#FFCCCB'};
   `;
   
   const Image = styled.img`
@@ -84,74 +71,50 @@ import {
   margin-bottom: 30px;
   `
 
-  type cookies = {
-    id:number,
-    count:number,
-  }
-  
-  type User = {
-    name:string,
-    password: string,
-    alergens: string[],
-    cookies: cookies[], 
-  }
-
 const Product = ({ item } : {item : any}) => {
+  const dispatch = useDispatch();
   const AllUsers:User[] = JSON.parse(localStorage.getItem("AllUsers") || "[]");
   const UserID:string = JSON.parse(localStorage.getItem("UserID") || "-1");
   var CurUser:User = AllUsers[parseInt(UserID)];
   var IsAlergic:boolean;
-  
+  const lightGrey = '#f5fbfd';
+  const lightRed = '#FFCCCB';
+  var color:string = lightGrey;
+
   if(parseInt(UserID) == -1)
   {
-    IsAlergic = false;
+    color = lightGrey;
   }
   else
   {
-    IsAlergic = CurUser.alergens.some(r => item.alergens.includes(r));
+    IsAlergic = CurUser.alergens.some(r => item.alergens.includes(r))
+    if(CurUser.alergens.some(r => item.alergens.includes(r)))
+    {
+      color = lightRed;
+    }
   }
 
   const handleAddToCart = ()=>{
-    const newCookie:cookies={
-      id: item.id,
-      count: 1,
-    }
-
-    var AlreadyInCart = false;
-
-    for(var i = 0; i < CurUser.cookies.length; i++)
+    if(IsAlergic)
     {
-      if(CurUser.cookies[i].id == newCookie.id)
-      {
-        AlreadyInCart = true;
-        break;
-      }
-    }
-    if(AlreadyInCart)
-    {
-      CurUser.cookies[i].count += 1;
+      alert("Вы не можете добавить этот товар в корзину, так как у вас алергия на один или несколько продуктов в его составе");
     }
     else
     {
-      CurUser.cookies.push(newCookie);
+      dispatch(addToCart(item.id));
     }
-    localStorage.setItem("AllUsers", JSON.stringify(AllUsers))
-  }
-
-  const handleAddToCartIfAlergic = () => {
-    alert("Вы не можете добавить этот товар в корзину, так как у вас алергия на один или несколько продуктов в его составе");
   }
 
   return (
-    <>
-      {IsAlergic ? (
-        <Alergic>
+        <Alergic color = {color}>
           <CookieName> {item.name} </CookieName>
           <Image src={item.img} />
           <CookiePrice> {item.price} </CookiePrice>
           <Info>
             <Icon>
-              <ShoppingCartOutlined onClick = {handleAddToCartIfAlergic}/>
+              <ShoppingCartOutlined 
+              id = {item.id} 
+              onClick = {handleAddToCart}/>
             </Icon>
             <Icon>
               <SearchOutlined />
@@ -161,25 +124,6 @@ const Product = ({ item } : {item : any}) => {
             </Icon>
           </Info>
         </Alergic>
-      ):(
-        <NotAlergic>
-          <CookieName> {item.name} </CookieName>
-          <Image src={item.img} />
-          <CookiePrice> {item.price} </CookiePrice>
-          <Info>
-            <Icon>
-              <ShoppingCartOutlined onClick = {handleAddToCart}/>
-            </Icon>
-            <Icon>
-              <SearchOutlined />
-            </Icon>
-            <Icon>
-              <FavoriteBorderOutlined />
-            </Icon>
-          </Info>
-        </NotAlergic>
-      )}
-    </>
   )
 }
   

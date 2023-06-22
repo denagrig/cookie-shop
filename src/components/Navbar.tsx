@@ -3,6 +3,9 @@ import { Search, ShoppingCartOutlined } from '@material-ui/icons';
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
 import { useState } from 'react';
+import { User } from "../types";
+import { getMemoizedNumItems } from '../slices/cartSlice';
+import { useAppSelector } from '../hooks';
 
 const Container = styled.div`
   height: 60px;
@@ -52,38 +55,18 @@ const MenuItem = styled.div`
   color: 'black';
 `
 
-type cookies = {
-  id:number,
-  count:number,
-}
-
-type User = {
-  name:string,
-  password: string,
-  alergens: string[],
-  cookies: cookies[], 
-}
-
-
-
 const Navbar = () => {
   const AllUsers:User[] = JSON.parse(localStorage.getItem("AllUsers") || "[]");
   const UserID:string =  JSON.parse(localStorage.getItem("UserID") || "-1");
   const [username, setUsername] = useState('');
   const [SignedIn, setSignedIn] = useState(false);
-  const [CookiesCnt, setCookiesCnt] = useState(0);
-  var CurCookiesCnt = 0;
+  var CurCookiesCnt = useAppSelector(getMemoizedNumItems);
   var curUser = AllUsers[parseInt(UserID)];
   
   if(parseInt(UserID) != -1 && !SignedIn)
   {
     setSignedIn(true);
     setUsername(curUser.name);
-    for(let i = 0; i < curUser.cookies.length; i++)
-    {
-      CurCookiesCnt += curUser.cookies[i].count;
-    }
-    setCookiesCnt(CurCookiesCnt);
   }
 
   return (
@@ -105,7 +88,7 @@ const Navbar = () => {
             <MenuItem id = "logout" onClick = {handleLogout}>ВЫЙТИ</MenuItem>
             <MenuItem>
             <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Badge badgeContent = {CookiesCnt} color = 'primary'>
+              <Badge badgeContent = {CurCookiesCnt} color = 'primary'>
                 <ShoppingCartOutlined />
               </Badge>
             </Link>

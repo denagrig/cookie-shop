@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { cookies } from "../data";
+import { cookiesArray } from "../data";
 import Product from "./Product";
 
 const Container = styled.div`
@@ -12,7 +12,7 @@ const Container = styled.div`
 const Products = () => {
   return (
     <Container>
-      {cookies.map((item) => (
+      {cookiesArray.map((item) => (
         <Product item={item} key={item.id} />
       ))}
     </Container>

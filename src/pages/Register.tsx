@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { User } from "../types";
 
 const Container = styled.div`
   width: 100vw;
@@ -55,18 +56,6 @@ const LinkContainer = styled.a`
   cursor: pointer;
 `;
 
-type cookies = {
-  id:number,
-  count:number,
-}
-
-type User = {
-  name:string,
-  password: string,
-  alergens: string[],
-  cookies: cookies[], 
-}
-
 const AllUsers:User[] = JSON.parse(localStorage.getItem("AllUsers") || "[]");
 
 const Register = () => {
@@ -108,7 +97,6 @@ const Register = () => {
           name: inputs[0].value,
           password: inputs[1].value,
           alergens: inputs[3].value.split(','),
-          cookies: [],
         }
         for(let i = 0; i < curUser.alergens.length; i++)
         {
