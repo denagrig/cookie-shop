@@ -1,19 +1,17 @@
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import Products from '../components/Products'
+import Footer from "../components/Footer/Footer"
+import Navbar from "../components/Navbar/Navbar"
+import Products from "../components/Products/Products"
 
 document.title = "Магазин"
 
-
 const Home = () => {
-    return (
-      <div>
-        <Navbar />
-        <Products />
-        <Footer />
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Navbar />
+      <Products />
+      <Footer />
+    </div>
+  )
+}
 
-  
-  export default Home
+export default Home

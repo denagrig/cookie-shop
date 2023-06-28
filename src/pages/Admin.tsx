@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 const Container = styled.div`
   width: 100vw;
@@ -7,24 +7,23 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+`
 
 const Wrapper = styled.div`
   width: 25%;
   padding: 20px;
   background-color: white;
-`;
+`
 
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
-`;
+`
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-`;
-
+`
 
 const Button = styled.button`
   width: 40%;
@@ -39,10 +38,8 @@ const Button = styled.button`
 `
 
 const Login = () => {
-
-
-  const handleDelete = ()=>{
-   localStorage.clear();
+  const handleDelete = () => {
+    localStorage.clear()
   }
 
   return (
@@ -54,7 +51,7 @@ const Login = () => {
         </Form>
       </Wrapper>
     </Container>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
