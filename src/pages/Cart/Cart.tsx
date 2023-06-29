@@ -4,11 +4,11 @@ import { cookiesArray } from "../../data"
 import { useDispatch } from "react-redux"
 import { addToCart, removeFromCart } from "../../slices/cartSlice"
 import * as styled from "./Cart.styled"
-
+import { Cookies } from "../../types"
 
 const Cart = () => {
-  const items = useAppSelector(() =>
-    JSON.parse(localStorage.getItem("userCart") || "[]")
+  const items:Cookies[] = useAppSelector(() =>
+    JSON.parse(localStorage.getItem("userCart") || "")
   )
   const dispatch = useDispatch()
 
@@ -29,30 +29,30 @@ const Cart = () => {
       <styled.Wrapper>
         <styled.Form>
           <styled.Container>
-            {Object.entries(items).map(([, cookieData] : any) => (
-              <styled.ProductContainer key={cookieData.id}>
-                <styled.Text> {cookiesArray[parseInt(cookieData.id)].name} </styled.Text>
-                <styled.Image src={cookiesArray[parseInt(cookieData.id)].img} />
+            {items.length ? items.map((item) => (
+              <styled.ProductContainer key={item.id}>
+                <styled.Text> {cookiesArray[item.id].name} </styled.Text>
+                <styled.Image src={cookiesArray[item.id].img} />
                 <styled.PriceContainer>
                   <styled.Left>
-                    <styled.Text> {cookiesArray[parseInt(cookieData.id)].price} </styled.Text>
+                    <styled.Text> {cookiesArray[item.id].price} </styled.Text>
                   </styled.Left>
                   <styled.Right>
                     <styled.ClickableElement
-                      onClick={() => handleIncrease(parseInt(cookieData.id))}
+                      onClick={() => handleIncrease(item.id)}
                     >
                       +
                     </styled.ClickableElement>
-                    <styled.Count>{cookieData.count}</styled.Count>
+                    <styled.Count>{item.count}</styled.Count>
                     <styled.ClickableElement
-                      onClick={() => handleDecrease(parseInt(cookieData.id))}
+                      onClick={() => handleDecrease(item.id)}
                     >
                       -
                     </styled.ClickableElement>
                   </styled.Right>
                 </styled.PriceContainer>
               </styled.ProductContainer>
-            ))}
+            )) : <></>}
           </styled.Container>
           <styled.Button onClick={ClearCart}>Оплатить</styled.Button>
           <Link to="home">
