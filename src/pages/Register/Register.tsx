@@ -1,50 +1,21 @@
 import { Link, useNavigate } from "react-router-dom"
-import { User } from "../../types"
+import { register } from "../../slices/registerSlice"
+import { useDispatch } from "react-redux"
 import * as styled from "./Register.styled"
 
-const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
 
 const Register = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleRegister = () => {
     const inputs = document.getElementsByTagName("input")
-    let doesAlreadyExist = false
-    let hasEmptyInput = false
-    if (inputs[1].value == inputs[2].value) {
-      for (let i = 0; i < 4; i++) {
-        if (inputs[i].value == "") {
-          hasEmptyInput = true
-          break
-        }
-      }
-      for (let i = 0; i < allUsers.length; i++) {
-        if (inputs[0].value == allUsers[i].name) {
-          doesAlreadyExist = true
-          break
-        }
-      }
-      if (doesAlreadyExist) {
-        alert("Такое имя пользователя уже существует")
-      } else if (hasEmptyInput) {
-        alert("Пожалуйста введите все данные")
-      } else {
-        const curUser: User = {
-          name: inputs[0].value,
-          password: inputs[1].value,
-          alergens: inputs[3].value.split(","),
-        }
-        for (let i = 0; i < curUser.alergens.length; i++) {
-          curUser.alergens[i] = curUser.alergens[i].replace(/\s/g, "")
-        }
-        alert("Вы успешно зарегистрировны")
-        allUsers.push(curUser)
-        localStorage.setItem("allUsers", JSON.stringify(allUsers))
-        navigate("/login")
-      }
-    } else {
-      alert("Введенные пароли не совпадают")
+    const userData:string[] = []
+    for(let i = 0; i < 4;i++) {
+      userData[i] = inputs[i].value
     }
+    dispatch(register(userData))
+    navigate("/login")
   }
 
   return (

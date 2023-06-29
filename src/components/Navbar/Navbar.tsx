@@ -5,10 +5,13 @@ import { useState } from "react"
 import { User } from "../../types"
 import { getMemoizedNumItems } from "../../slices/cartSlice"
 import { useAppSelector } from "../../hooks"
+import { useDispatch } from "react-redux"
+import { logOut } from "../../slices/logInSlice"
 import * as styled from "./Navbar.styled"
 
-
 const Navbar = () => {
+  const dispatch = useDispatch()
+
   const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
   const userID: string = JSON.parse(localStorage.getItem("userID") || "-1")
   const [username, setUsername] = useState("")
@@ -19,6 +22,12 @@ const Navbar = () => {
   if (parseInt(userID) != -1 && !isSignedIn) {
     setIsSignedIn(true)
     setUsername(curUser.name)
+  }
+
+  const handleLogout = () => {
+    dispatch(logOut())
+    
+    // location.reload()
   }
 
   return (
@@ -75,11 +84,6 @@ const Navbar = () => {
       </styled.Wrapper>
     </styled.Container>
   )
-}
-
-function handleLogout() {
-  localStorage.setItem("userID", JSON.stringify(-1))
-  location.reload()
 }
 
 export default Navbar

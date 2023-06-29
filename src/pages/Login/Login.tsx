@@ -1,52 +1,20 @@
 import { Link, useNavigate } from "react-router-dom"
-import { User } from "../../types"
+import { useDispatch } from "react-redux"
+import { logIn } from "../../slices/logInSlice"
 import * as styled from "./Login.styled"
-
-const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
 
 const Login = () => {
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
+  
   const handleLogin = () => {
     const inputs = document.getElementsByTagName("input")
-    let hasEmptyInput = false
-    let hasWrongPassword = false
-    let hasWrongName = true
-    let UserID = -1
-
-    for (let i = 0; i < 2; i++) {
-      if (inputs[i].value == "") {
-        hasEmptyInput = true
-        break
-      }
+    const userData:string[] = []
+    for(let i = 0; i < 2;i++) {
+      userData[i] = inputs[i].value
     }
-    for (let i = 0; i < allUsers.length; i++) {
-      if (inputs[0].value == allUsers[i].name) {
-        hasWrongName = false
-        break
-      }
-    }
-    if (hasEmptyInput) {
-      alert("Пожалуйста введите все данные")
-    } else if (hasWrongName) {
-      alert("Такого пользователя не существует")
-    } else {
-      for (let i = 0; i < allUsers.length; i++) {
-        if (inputs[0].value == allUsers[i].name) {
-          if (inputs[1].value != allUsers[i].password) {
-            hasWrongPassword = true
-          }
-          UserID = i
-          break
-        }
-      }
-      if (hasWrongPassword) {
-        alert("Введен неправильный пароль")
-      } else {
-        localStorage.setItem("userID", JSON.stringify(UserID))
-        navigate("/home")
-      }
-    }
+    dispatch(logIn(userData))
+    navigate("/home")
   }
 
   return (
