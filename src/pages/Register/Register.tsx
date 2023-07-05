@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { register } from "../../slices/registerSlice"
+import { register } from "../../slices/userSlice"
 import { useDispatch } from "react-redux"
 import * as styled from "./Register.styled"
 

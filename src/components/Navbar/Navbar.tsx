@@ -6,7 +6,7 @@ import { User } from "../../types"
 import { getMemoizedNumItems } from "../../slices/cartSlice"
 import { useAppSelector } from "../../hooks"
 import { useDispatch } from "react-redux"
-import { logOut } from "../../slices/logInSlice"
+import { logOut } from "../../slices/userSlice"
 import * as styled from "./Navbar.styled"
 
 const Navbar = () => {
@@ -26,8 +26,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logOut())
-    
-    // location.reload()
+    location.reload()
   }
 
   return (

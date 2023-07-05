@@ -2,18 +2,18 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "../../hooks"
 import { cookiesArray } from "../../data"
 import { useDispatch } from "react-redux"
-import { addToCart, removeFromCart } from "../../slices/cartSlice"
+import { addToCart, removeFromCart, removeAll } from "../../slices/cartSlice"
 import * as styled from "./Cart.styled"
 import { Cookies } from "../../types"
 
 const Cart = () => {
-  const items:Cookies[] = useAppSelector(() =>
-    JSON.parse(localStorage.getItem("userCart") || "")
+  const items:Cookies[] = useAppSelector((state) =>
+    state.cart.items
   )
   const dispatch = useDispatch()
 
-  const ClearCart = () => {
-    localStorage.setItem("userCart", JSON.stringify(""))
+  const clearCart = () => {
+    dispatch(removeAll())
   }
 
   function handleIncrease(id: number) {
@@ -54,7 +54,7 @@ const Cart = () => {
               </styled.ProductContainer>
             )) : <></>}
           </styled.Container>
-          <styled.Button onClick={ClearCart}>Оплатить</styled.Button>
+          <styled.Button onClick={clearCart}>Оплатить</styled.Button>
           <Link to="home">
             <styled.Button>Вернуться на главную</styled.Button>
           </Link>

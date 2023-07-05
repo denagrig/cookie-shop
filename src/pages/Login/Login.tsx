@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { logIn } from "../../slices/logInSlice"
+import { logIn } from "../../slices/userSlice"
 import * as styled from "./Login.styled"
 
 const Login = () => {
@@ -9,6 +9,7 @@ const Login = () => {
   
   const handleLogin = () => {
     const inputs = document.getElementsByTagName("input")
+    // useRef
     const userData:string[] = []
     for(let i = 0; i < 2;i++) {
       userData[i] = inputs[i].value

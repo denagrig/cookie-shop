@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit"
 import cartReducer from "./slices/cartSlice"
-import registerReducer from "./slices/registerSlice"
-import loginReducer from "./slices/logInSlice"
+import userReducer from "./slices/userSlice"
+import { save, load} from "./Middleware"
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
-    register: registerReducer,
-    login: loginReducer
+    user: userReducer,
   },
+  preloadedState: load(),
+  middleware:[save]
 })
 
 export type RootState = ReturnType<typeof store.getState>

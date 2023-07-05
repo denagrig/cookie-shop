@@ -2,9 +2,6 @@ import { PayloadAction, createSlice, createSelector } from "@reduxjs/toolkit"
 import { Cookies } from "../types"
 import { RootState } from "../store"
 
-const userID: string = JSON.parse(localStorage.getItem("userID") || "-1")
-const cart: [Cookies[]] = JSON.parse(localStorage.getItem("allCarts") || "[]")
-let curUserCart: Cookies[] = cart[parseInt(userID)]
 
 export interface CartState {
   items: Cookies[];
@@ -35,8 +32,6 @@ const cartSlice = createSlice({
         }
         state.items.push(newCookie)
       }
-      curUserCart = state.items.slice()
-      localStorage.setItem("userCart", JSON.stringify(state.items))
     },
     removeFromCart(state, action: PayloadAction<number>) {
       const id = action.payload
@@ -48,16 +43,17 @@ const cartSlice = createSlice({
             state.items.splice(i, 1)
         }
       }
-      curUserCart = state.items.slice()
-      localStorage.setItem("userCart", JSON.stringify(state.items))
     },
+    removeAll(state){
+      state.items = []
+    }
   },
 })
 
-export const { addToCart, removeFromCart } = cartSlice.actions
+export const { addToCart, removeFromCart, removeAll } = cartSlice.actions
 export default cartSlice.reducer
 export const getMemoizedNumItems = createSelector(
-  (state: RootState) => JSON.parse(localStorage.getItem("userCart") || "[]"),
+  (state: RootState) => state.cart.items,
   (items) => {
     let numItems = 0
     for (const id in items) {
