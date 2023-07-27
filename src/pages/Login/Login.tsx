@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { logIn } from "../../slices/userSlice"
+import { logIn, saveUserID } from "../../slices/userSlice"
 import * as styled from "./Login.styled"
+import { AppDispatch, store } from "../../store"
 
 const Login = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  
+  const dispatch = useDispatch<AppDispatch>()
+
+
   const handleLogin = () => {
     const inputs = document.getElementsByTagName("input")
     // useRef
@@ -15,7 +17,10 @@ const Login = () => {
       userData[i] = inputs[i].value
     }
     dispatch(logIn(userData))
-    navigate("/home")
+    dispatch(saveUserID(store.getState().user.userID))
+    if(store.getState().user.userID != -1){
+      navigate("/home")
+    }
   }
 
   return (

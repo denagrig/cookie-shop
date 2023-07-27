@@ -1,7 +1,30 @@
-import { PayloadAction, createSlice, createSelector } from "@reduxjs/toolkit"
-import { Cookies } from "../types"
+import { PayloadAction, createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit"
+import { Cookies, UserCartData } from "../types"
 import { RootState } from "../store"
+import { getUserCart, setUserCart } from "./cartLocalStorage"
 
+
+export const loadCart = createAsyncThunk<Cookies[], number>(
+  "cartSlice/load",
+  async (id: number, thunkAPI) => {
+    try {
+      return await getUserCart(id)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
+export const saveCart = createAsyncThunk<void, UserCartData>(
+  "cartSlice/sace",
+  async (cart: UserCartData, thunkAPI) => {
+    try {
+      return await setUserCart(cart)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
 
 export interface CartState {
   items: Cookies[];
@@ -17,15 +40,15 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action: PayloadAction<number>) {
       const id = action.payload
-      let AlreadyInCart = false
-      for (let i = 0; i < state.items.length; i++) {
-        if (id == state.items[i].id) {
-          AlreadyInCart = true
-          state.items[i].count++
-          break
+      let alreadyInCart = false
+      const cookies = state.items
+      cookies.map(cookie => {
+        if (id == cookie.id) {
+          alreadyInCart = true
+          cookie.count++
         }
-      }
-      if (!AlreadyInCart) {
+      })
+      if (!alreadyInCart) {
         const newCookie: Cookies = {
           id: id,
           count: 1,
@@ -35,19 +58,31 @@ const cartSlice = createSlice({
     },
     removeFromCart(state, action: PayloadAction<number>) {
       const id = action.payload
-      for (let i = 0; i < state.items.length; i++) {
-        if (id == state.items[i].id) {
-          if (state.items[i].count > 1) {
-            state.items[i].count--
+      const cookies = state.items
+      let curCookie = 0
+      cookies.map(cookie => {
+        if (id == cookie.id) {
+          if (cookie.count > 1) {
+            cookie.count--
           } else 
-            state.items.splice(i, 1)
+            state.items.splice(curCookie, 1)
         }
-      }
+        curCookie++
+      })
     },
     removeAll(state){
       state.items = []
     }
   },
+  extraReducers: (builder) => {
+    builder.addCase(loadCart.fulfilled, (state, action) => {
+      state.items = action.payload
+      console.log("cart loaded")
+    })
+    builder.addCase(saveCart.fulfilled, () => {
+      console.log("data saved")
+    })
+  }
 })
 
 export const { addToCart, removeFromCart, removeAll } = cartSlice.actions
@@ -56,9 +91,9 @@ export const getMemoizedNumItems = createSelector(
   (state: RootState) => state.cart.items,
   (items) => {
     let numItems = 0
-    for (const id in items) {
-      numItems += items[id].count
-    }
+    items.map(item => {
+      numItems += item.count
+    })
     return numItems
   }
 )

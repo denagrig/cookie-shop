@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const Container = styled.div`
+export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background-size: cover;
@@ -9,23 +9,23 @@ const Container = styled.div`
   justify-content: center;
 `
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   width: 25%;
   padding: 20px;
   background-color: white;
 `
 
-const Title = styled.h1`
+export const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
 `
 
-const Form = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
 `
 
-const Button = styled.button`
+export const Button = styled.button`
   width: 40%;
   border: none;
   padding: 15px 20px;
@@ -36,22 +36,3 @@ const Button = styled.button`
   position: relative;
   transform: translateX(33%);
 `
-
-const Login = () => {
-  const handleDelete = () => {
-    localStorage.clear()
-  }
-
-  return (
-    <Container>
-      <Wrapper>
-        <Title>Удалить всех пользователей</Title>
-        <Form>
-          <Button onClick={handleDelete}>Удалить</Button>
-        </Form>
-      </Wrapper>
-    </Container>
-  )
-}
-
-export default Login

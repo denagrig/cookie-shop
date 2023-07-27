@@ -2,26 +2,47 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "../../hooks"
 import { cookiesArray } from "../../data"
 import { useDispatch } from "react-redux"
-import { addToCart, removeFromCart, removeAll } from "../../slices/cartSlice"
+import { addToCart, removeFromCart, removeAll, saveCart} from "../../slices/cartSlice"
 import * as styled from "./Cart.styled"
-import { Cookies } from "../../types"
+import { Cookies, UserCartData } from "../../types"
+import { AppDispatch, store } from "../../store"
 
 const Cart = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  
+  const userID:number = useAppSelector((state) =>
+    state.user.userID
+  )
+
   const items:Cookies[] = useAppSelector((state) =>
     state.cart.items
   )
-  const dispatch = useDispatch()
-
+  
   const clearCart = () => {
     dispatch(removeAll())
+    const userCartData: UserCartData = {
+      id: userID,
+      cart: store.getState().cart.items
+    }
+    dispatch(saveCart(userCartData))
   }
 
   function handleIncrease(id: number) {
     dispatch(addToCart(id))
+    const userCartData: UserCartData = {
+      id: userID,
+      cart: store.getState().cart.items
+    }
+    dispatch(saveCart(userCartData))
   }
 
   function handleDecrease(id: number) {
     dispatch(removeFromCart(id))
+    const userCartData: UserCartData = {
+      id: userID,
+      cart: store.getState().cart.items
+    }
+    dispatch(saveCart(userCartData))
   }
 
   return (

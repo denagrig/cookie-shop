@@ -5,8 +5,8 @@ import { Container } from "./Products.styled"
 const Products = () => {
   return (
     <Container>
-      {cookiesArray.map((item) => (
-        <Product item={item} key={item.id} />
+      {Object.keys(cookiesArray).map((key : string) => (
+        <Product item={cookiesArray[parseInt(key)]} key={key} />
       ))}
     </Container>
   )

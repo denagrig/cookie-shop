@@ -1,32 +1,40 @@
 import { Badge } from "@material-ui/core"
 import { Search, ShoppingCartOutlined } from "@material-ui/icons"
 import { Link } from "react-router-dom"
-import { useState } from "react"
-import { User } from "../../types"
+import { useEffect, useState } from "react"
 import { getMemoizedNumItems } from "../../slices/cartSlice"
 import { useAppSelector } from "../../hooks"
 import { useDispatch } from "react-redux"
-import { logOut } from "../../slices/userSlice"
+import { logOut, saveUserID } from "../../slices/userSlice"
 import * as styled from "./Navbar.styled"
+import { AppDispatch } from "../../store"
+import { User } from "../../types"
 
 const Navbar = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
-  const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
-  const userID: string = JSON.parse(localStorage.getItem("userID") || "-1")
+  const allUsers: User[] = useAppSelector((state) => state.user.users)
+  const userID: number = useAppSelector((state) => state.user.userID)
+
   const [username, setUsername] = useState("")
   const [isSignedIn, setIsSignedIn] = useState(false)
   const curCookiesCnt = useAppSelector(getMemoizedNumItems)
-  const curUser = allUsers[parseInt(userID)]
+  const curUser = allUsers[userID]
 
-  if (parseInt(userID) != -1 && !isSignedIn) {
-    setIsSignedIn(true)
-    setUsername(curUser.name)
-  }
+  useEffect(()=>{
+    if (userID != -1) {
+      setIsSignedIn(true)
+      setUsername(curUser.name)
+    }
+    else {
+      setIsSignedIn(false)
+    }
+  }, [userID])
+  
 
   const handleLogout = () => {
     dispatch(logOut())
-    location.reload()
+    dispatch(saveUserID(-1))
   }
 
   return (

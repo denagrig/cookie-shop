@@ -3,13 +3,15 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from "@material-ui/icons"
-import { User } from "../../types"
-import { addToCart } from "../../slices/cartSlice"
+import { User, UserCartData } from "../../types"
+import { addToCart, saveCart } from "../../slices/cartSlice"
 import { useDispatch } from "react-redux"
+import { MainPageCookie } from "../../types"
 import * as styled from "./Product.styled"
+import { AppDispatch, store } from "../../store"
 
-const Product = ({ item }: { item : any }) => {
-  const dispatch = useDispatch()
+const Product = ({ item }: { item : MainPageCookie}) => {
+  const dispatch = useDispatch<AppDispatch>()
   const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
   const userID: string = JSON.parse(localStorage.getItem("userID") || "-1")
   const curUser: User = allUsers[parseInt(userID)]
@@ -30,6 +32,11 @@ const Product = ({ item }: { item : any }) => {
       )
     } else {
       dispatch(addToCart(item.id))
+      const userCartData: UserCartData = {
+        id: parseInt(userID),
+        cart: store.getState().cart.items
+      }
+      dispatch(saveCart(userCartData))
     }
   }
 
