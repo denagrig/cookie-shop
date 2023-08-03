@@ -1,4 +1,4 @@
-import * as styled from "./Admin.styled"
+import {Container, Wrapper, Title, Form, Button} from "./Admin.styled"
 
 const Login = () => {
   const handleDelete = () => {
@@ -6,14 +6,14 @@ const Login = () => {
   }
 
   return (
-    <styled.Container>
-      <styled.Wrapper>
-        <styled.Title>Удалить всех пользователей</styled.Title>
-        <styled.Form>
-          <styled.Button onClick={handleDelete}>Удалить</styled.Button>
-        </styled.Form>
-      </styled.Wrapper>
-    </styled.Container>
+    <Container>
+      <Wrapper>
+        <Title>Удалить всех пользователей</Title>
+        <Form>
+          <Button onClick={handleDelete}>Удалить</Button>
+        </Form>
+      </Wrapper>
+    </Container>
   )
 }
 

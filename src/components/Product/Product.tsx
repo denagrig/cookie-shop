@@ -7,7 +7,7 @@ import { User, UserCartData } from "../../types"
 import { addToCart, saveCart } from "../../slices/cartSlice"
 import { useDispatch } from "react-redux"
 import { MainPageCookie } from "../../types"
-import * as styled from "./Product.styled"
+import { Alergic, CookieName, CookiePrice, Image, Info, Icon} from "./Product.styled"
 import { AppDispatch, store } from "../../store"
 
 const Product = ({ item }: { item : MainPageCookie}) => {
@@ -41,22 +41,22 @@ const Product = ({ item }: { item : MainPageCookie}) => {
   }
 
   return (
-    <styled.Alergic color={color}>
-      <styled.CookieName> {item.name} </styled.CookieName>
-      <styled.Image src={item.img} />
-      <styled.CookiePrice> {item.price} </styled.CookiePrice>
-      <styled.Info>
-        <styled.Icon>
+    <Alergic color={color}>
+      <CookieName> {item.name} </CookieName>
+      <Image src={item.img} />
+      <CookiePrice> {item.price} </CookiePrice>
+      <Info>
+        <Icon>
           <ShoppingCartOutlined onClick={handleAddToCart} />
-        </styled.Icon>
-        <styled.Icon>
+        </Icon>
+        <Icon>
           <SearchOutlined />
-        </styled.Icon>
-        <styled.Icon>
+        </Icon>
+        <Icon>
           <FavoriteBorderOutlined />
-        </styled.Icon>
-      </styled.Info>
-    </styled.Alergic>
+        </Icon>
+      </Info>
+    </Alergic>
   )
 }
 

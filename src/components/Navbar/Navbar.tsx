@@ -6,7 +6,7 @@ import { getMemoizedNumItems } from "../../slices/cartSlice"
 import { useAppSelector } from "../../hooks"
 import { useDispatch } from "react-redux"
 import { logOut, saveUserID } from "../../slices/userSlice"
-import * as styled from "./Navbar.styled"
+import { Center, Container, Input, Left, MenuItem, Right, SearchContainer, Wrapper } from "./Navbar.styled"
 import { AppDispatch } from "../../store"
 import { User } from "../../types"
 
@@ -38,25 +38,25 @@ const Navbar = () => {
   }
 
   return (
-    <styled.Container>
-      <styled.Wrapper>
-        <styled.Left>
-          <styled.SearchContainer>
-            <styled.Input placeholder="название товара" />
+    <Container>
+      <Wrapper>
+        <Left>
+          <SearchContainer>
+            <Input placeholder="название товара" />
             <Search style={{ color: "gray", fontSize: 16 }} />
-          </styled.SearchContainer>
-        </styled.Left>
-        <styled.Center>
+          </SearchContainer>
+        </Left>
+        <Center>
           <h1>COOKIE</h1>
-        </styled.Center>
-        <styled.Right>
+        </Center>
+        <Right>
           {isSignedIn ? (
             <>
-              <styled.MenuItem>Вы зарегистрированы как {username}</styled.MenuItem>
-              <styled.MenuItem id="logout" onClick={handleLogout}>
+              <MenuItem>Вы зарегистрированы как {username}</MenuItem>
+              <MenuItem id="logout" onClick={handleLogout}>
                 ВЫЙТИ
-              </styled.MenuItem>
-              <styled.MenuItem>
+              </MenuItem>
+              <MenuItem>
                 <Link
                   to="/cart"
                   style={{ textDecoration: "none", color: "inherit" }}
@@ -65,31 +65,31 @@ const Navbar = () => {
                     <ShoppingCartOutlined />
                   </Badge>
                 </Link>
-              </styled.MenuItem>
+              </MenuItem>
             </>
           ) : (
             <>
-              <styled.MenuItem>
+              <MenuItem>
                 <Link
                   to="/register"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   РЕГИСТРАЦИЯ
                 </Link>
-              </styled.MenuItem>
-              <styled.MenuItem>
+              </MenuItem>
+              <MenuItem>
                 <Link
                   to="/login"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   ВОЙТИ
                 </Link>
-              </styled.MenuItem>
+              </MenuItem>
             </>
           )}
-        </styled.Right>
-      </styled.Wrapper>
-    </styled.Container>
+        </Right>
+      </Wrapper>
+    </Container>
   )
 }
 

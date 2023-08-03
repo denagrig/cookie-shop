@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { User } from "../types"
-import { getUserID, getUsers, setUserID, setUsers } from "./userLoacalStorage"
+import { getUserID, getUsers, setUserID, setUsers } from "./userLocalStorage"
 
 export const loadUsers = createAsyncThunk<User[], void>(
   "userSlice/loadUsers",
@@ -46,97 +46,66 @@ export const saveUserID = createAsyncThunk<void, number>(
   }
 )
 
-
-
 export interface UserState {
-  users: User[],
-  userID: number
+  users: User[];
+  userID: number;
 }
 
 const initialState: UserState = {
   users: [],
-  userID: -1
+  userID: -1,
 }
 
 const userSlice = createSlice({
-  name: "logIn",
+  name: "userSlice",
   initialState,
   reducers: {
     register(state, action: PayloadAction<Array<string>>) {
       const name = action.payload[0]
       const password = action.payload[1]
-      const confirmPassword = action.payload[2]
       const alergens = action.payload[3]
       let doesAlreadyExist = false
-      let hasEmptyInput = false
-      const inputs = action.payload
       const allUsers = state.users
       let alergenNum = 0
 
-      if (password == confirmPassword) {
-        inputs.map(input => {
-          if (input == "") {
-            hasEmptyInput = true
-          }
-        })
-
-        allUsers.map(user => {
-          if (name == user.name) {
-            doesAlreadyExist = true
-          }
-        })
-
-        if (doesAlreadyExist) {
-          alert("Такое имя пользователя уже существует")
-        } else if (hasEmptyInput) {
-          alert("Пожалуйста введите все данные")
-        } else {
-          const curUser: User = {
-            name: name,
-            password: password,
-            cookies: [],
-            alergens: alergens.split(",")
-          }
-          curUser.alergens.map(alergen => {
-            curUser.alergens[alergenNum] = alergen.replace(/\s/g, "")
-            alergenNum++
-          })
-          alert("Вы успешно зарегистрировны")
-          state.users.push(curUser)
+      allUsers.map((user) => {
+        if (name == user.name) {
+          doesAlreadyExist = true
         }
-      } else {
-        alert("Введенные пароли не совпадают")
+      })
+
+      if (!doesAlreadyExist) {
+        const curUser: User = {
+          name: name,
+          password: password,
+          cookies: [],
+          alergens: alergens.split(","),
+        }
+        curUser.alergens.map((alergen) => {
+          curUser.alergens[alergenNum] = alergen.replace(/\s/g, "")
+          alergenNum++
+        })
+        state.users.push(curUser)
+        state.userID = state.users.length - 1
       }
     },
     logIn(state, action: PayloadAction<Array<string>>) {
       const name = action.payload[0]
       const password = action.payload[1]
-      let hasEmptyInput = false
       let hasWrongPassword = false
       let hasWrongName = true
       let userID = -1
       let curID = 0
-      const inputs = action.payload
       const allUsers = state.users
 
-      inputs.map(input => {
-        if (input == "") {
-          hasEmptyInput = true
-        }
-      }) 
-
-      allUsers.map(user => {
+      allUsers.map((user) => {
         if (name == user.name) {
           hasWrongName = false
         }
       })
 
-      if (hasEmptyInput) {
-        alert("Пожалуйста введите все данные")
-      } else if (hasWrongName) {
-        alert("Такого пользователя не существует")
-      } else {
-        allUsers.map(user => {
+      if (!hasWrongName) {
+        allUsers.map((user) => {
           if (name == user.name) {
             if (password != user.password) {
               hasWrongPassword = true
@@ -146,16 +115,14 @@ const userSlice = createSlice({
           curID++
         })
 
-        if (hasWrongPassword) {
-          alert("Введен неправильный пароль")
-        } else {
+        if (!hasWrongPassword) {
           state.userID = userID
         }
       }
     },
     logOut(state) {
       state.userID = -1
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadUsers.fulfilled, (state, action) => {
@@ -172,7 +139,7 @@ const userSlice = createSlice({
     builder.addCase(saveUserID.fulfilled, () => {
       console.log("id saved")
     })
-  }
+  },
 })
 
 export const { logIn, logOut, register } = userSlice.actions

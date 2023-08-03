@@ -1,6 +1,7 @@
 import cookie from "../src/assets/cookie.png"
+import { MainPageCookie } from "./types"
 
-export const cookiesArray = {
+export const cookiesRecord : Record <number, MainPageCookie>= {
   1:
   {
     id: 1,

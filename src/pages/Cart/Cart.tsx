@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../../hooks"
-import { cookiesArray } from "../../data"
+import { cookiesRecord } from "../../data"
 import { useDispatch } from "react-redux"
 import { addToCart, removeFromCart, removeAll, saveCart} from "../../slices/cartSlice"
-import * as styled from "./Cart.styled"
+import {Container, Wrapper, Form, ProductContainer, Image, PriceContainer, Left, Right, ClickableElement, Text, Count, Button} from "./Cart.styled"
 import { Cookies, UserCartData } from "../../types"
 import { AppDispatch, store } from "../../store"
 
@@ -46,42 +46,42 @@ const Cart = () => {
   }
 
   return (
-    <styled.Container>
-      <styled.Wrapper>
-        <styled.Form>
-          <styled.Container>
+    <Container>
+      <Wrapper>
+        <Form>
+          <Container>
             {items.length ? items.map((item) => (
-              <styled.ProductContainer key={item.id}>
-                <styled.Text> {cookiesArray[item.id].name} </styled.Text>
-                <styled.Image src={cookiesArray[item.id].img} />
-                <styled.PriceContainer>
-                  <styled.Left>
-                    <styled.Text> {cookiesArray[item.id].price} </styled.Text>
-                  </styled.Left>
-                  <styled.Right>
-                    <styled.ClickableElement
+              <ProductContainer key={item.id}>
+                <Text> {cookiesRecord[item.id].name} </Text>
+                <Image src={cookiesRecord[item.id].img} />
+                <PriceContainer>
+                  <Left>
+                    <Text> {cookiesRecord[item.id].price} </Text>
+                  </Left>
+                  <Right>
+                    <ClickableElement
                       onClick={() => handleIncrease(item.id)}
                     >
                       +
-                    </styled.ClickableElement>
-                    <styled.Count>{item.count}</styled.Count>
-                    <styled.ClickableElement
+                    </ClickableElement>
+                    <Count>{item.count}</Count>
+                    <ClickableElement
                       onClick={() => handleDecrease(item.id)}
                     >
                       -
-                    </styled.ClickableElement>
-                  </styled.Right>
-                </styled.PriceContainer>
-              </styled.ProductContainer>
+                    </ClickableElement>
+                  </Right>
+                </PriceContainer>
+              </ProductContainer>
             )) : <></>}
-          </styled.Container>
-          <styled.Button onClick={clearCart}>Оплатить</styled.Button>
+          </Container>
+          <Button onClick={clearCart}>Оплатить</Button>
           <Link to="home">
-            <styled.Button>Вернуться на главную</styled.Button>
+            <Button>Вернуться на главную</Button>
           </Link>
-        </styled.Form>
-      </styled.Wrapper>
-    </styled.Container>
+        </Form>
+      </Wrapper>
+    </Container>
   )
 }
 

@@ -1,12 +1,12 @@
-import { cookiesArray } from "../../data"
+import { cookiesRecord } from "../../data"
 import Product from "../Product/Product"
 import { Container } from "./Products.styled"
 
 const Products = () => {
   return (
     <Container>
-      {Object.keys(cookiesArray).map((key : string) => (
-        <Product item={cookiesArray[parseInt(key)]} key={key} />
+      {Object.keys(cookiesRecord).map((key : string) => (
+        <Product item={cookiesRecord[parseInt(key)]} key={key} />
       ))}
     </Container>
   )
