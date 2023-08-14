@@ -2,10 +2,10 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "../../hooks"
 import { cookiesRecord } from "../../data"
 import { useDispatch } from "react-redux"
-import { addToCart, removeFromCart, saveCart} from "../../slices/cartSlice"
 import {Container, Wrapper, Form, ProductContainer, Image, PriceContainer, Left, Right, ClickableElement, Text, Count, Button} from "./Cart.styled"
-import { Cookies, CurUserIdAndCart } from "../../types"
-import { AppDispatch, store } from "../../store"
+import { AddCookieToUser, Cookies } from "../../types"
+import { AppDispatch } from "../../store"
+import { addCookie, clearCart } from "../../slices/userSlice"
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -13,35 +13,31 @@ const Cart = () => {
   const userID:number = useAppSelector((state) =>
     state.user.userID
   )
-
+  
   const items:Cookies[] = useAppSelector((state) =>
     state.user.userData.cart
   )
   
-  const clearCart = () => {
-    const userCartData: CurUserIdAndCart = {
-      id: userID,
-      cart: []
-    }
-    dispatch(saveCart(userCartData))
+  const handleClear = () => {
+    dispatch(clearCart(userID))
   }
 
   function handleIncrease(id: number) {
-    dispatch(addToCart(id))
-    const userCartData: CurUserIdAndCart = {
-      id: userID,
-      cart: store.getState().cart.items
+    const addCookieToUser: AddCookieToUser = {
+      userID: userID,
+      cookieID: id,
+      cookieCount: 1
     }
-    dispatch(saveCart(userCartData))
+    dispatch(addCookie(addCookieToUser))
   }
 
   function handleDecrease(id: number) {
-    dispatch(removeFromCart(id))
-    const userCartData: CurUserIdAndCart = {
-      id: userID,
-      cart: store.getState().cart.items
+    const addCookieToUser: AddCookieToUser = {
+      userID: userID,
+      cookieID: id,
+      cookieCount: -1
     }
-    dispatch(saveCart(userCartData))
+    dispatch(addCookie(addCookieToUser))
   }
 
   return (
@@ -74,7 +70,7 @@ const Cart = () => {
               </ProductContainer>
             )) : <></>}
           </Container>
-          <Button onClick={clearCart}>Оплатить</Button>
+          <Button onClick={handleClear}>Оплатить</Button>
           <Link to="home">
             <Button>Вернуться на главную</Button>
           </Link>

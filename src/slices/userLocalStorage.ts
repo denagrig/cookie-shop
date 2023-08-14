@@ -1,4 +1,4 @@
-import { UserLoginData, User, UserDataAndId } from "../types"
+import { UserLoginData, User, UserDataAndId, AddCookieToUser, Cookies } from "../types"
 
 export const getUser = async() => {
   return new Promise<UserDataAndId>((resolve)=>{
@@ -12,7 +12,7 @@ export const getUser = async() => {
       userID: -1
     }
     const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
-    const userID : number = JSON.parse(localStorage.getItem("userID") || "-1")
+    const userID: number = JSON.parse(localStorage.getItem("userID") || "-1")
 
     if(userID != -1){
       userDataAndId.userID = userID
@@ -102,6 +102,58 @@ export const getUserID = async() => {
 export const setUserID = async(userID: number) => {
   return new Promise<boolean>((resolve)=>{
     localStorage.setItem("userID", JSON.stringify(userID))
+    resolve(true)
+  })
+}
+
+export const setUserCart = async(userAndCartData: AddCookieToUser) => {
+  return new Promise<User>((resolve)=>{
+    const userID = userAndCartData.userID
+    const cookieID = userAndCartData.cookieID 
+    const cookieCnt = userAndCartData.cookieCount
+
+    const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
+    const curUser = allUsers[userID]
+    let alreadyInCart = false
+    let curCookie = 0
+    const cart = curUser.cart
+    
+
+    cart.map(cookie => {
+      if (cookieID == cookie.id) {
+        alreadyInCart = true
+        cookie.count += cookieCnt
+        if(cookie.count == 0)
+        {
+          cart.splice(curCookie, 1)
+        }
+      }
+      curCookie++
+    })
+    if (!alreadyInCart) {
+      const newCookie: Cookies = {
+        id: cookieID,
+        count: 1,
+      }
+      cart.push(newCookie)
+    }
+    
+    curUser.cart = cart
+    allUsers[userAndCartData.userID] = curUser
+    
+    localStorage.setItem("allUsers", JSON.stringify(allUsers))
+    resolve(curUser)
+    return curUser
+  })
+}
+
+export const clearUserCart = async(userID : number) => {
+  return new Promise<boolean>((resolve)=>{
+    const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
+    const curUser:User = allUsers[userID]
+    curUser.cart = []
+    allUsers[userID] = curUser
+    localStorage.setItem("allUsers", JSON.stringify(allUsers))
     resolve(true)
   })
 }

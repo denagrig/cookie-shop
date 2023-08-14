@@ -3,12 +3,12 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from "@material-ui/icons"
-import { User, CurUserIdAndCart } from "../../types"
-import { addToCart, saveCart } from "../../slices/cartSlice"
+import { User, AddCookieToUser} from "../../types"
 import { useDispatch } from "react-redux"
 import { MainPageCookie } from "../../types"
 import { Alergic, CookieName, CookiePrice, Image, Info, Icon} from "./Product.styled"
-import { AppDispatch, store } from "../../store"
+import { AppDispatch } from "../../store"
+import { addCookie } from "../../slices/userSlice"
 
 const Product = ({ item }: { item : MainPageCookie}) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -31,12 +31,12 @@ const Product = ({ item }: { item : MainPageCookie}) => {
         "Вы не можете добавить этот товар в корзину, так как у вас алергия на один или несколько продуктов в его составе"
       )
     } else {
-      dispatch(addToCart(item.id))
-      const userCartData: CurUserIdAndCart = {
-        id: parseInt(userID),
-        cart: store.getState().cart.items
+      const addCookieToUser: AddCookieToUser = {
+        userID: parseInt(userID),
+        cookieID: item.id,
+        cookieCount: 1
       }
-      dispatch(saveCart(userCartData))
+      dispatch(addCookie(addCookieToUser))
     }
   }
 

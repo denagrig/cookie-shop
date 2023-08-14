@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { UserLoginData, User, UserDataAndId } from "../types"
-import { getUser, setUserID, registerUser, logInUser, logOutUser } from "./userLocalStorage"
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
+import { UserLoginData, User, UserDataAndId, AddCookieToUser } from "../types"
+import { getUser, setUserID, registerUser, logInUser, logOutUser, setUserCart, clearUserCart } from "./userLocalStorage"
+import { RootState } from "../store"
 
 export const loadUser = createAsyncThunk<UserDataAndId, void>(
   "userSlice/loadUser",
@@ -57,6 +58,28 @@ export const saveUserID = createAsyncThunk<boolean, number>(
   }
 )
 
+export const addCookie = createAsyncThunk<User, AddCookieToUser>(
+  "userSlice/addCookie",
+  async (userAndCartData: AddCookieToUser, thunkAPI) => {
+    try {
+      return await setUserCart(userAndCartData)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
+export const clearCart = createAsyncThunk<boolean, number>(
+  "userSlice/clearCart",
+  async (userID: number, thunkAPI) => {
+    try {
+      return await clearUserCart(userID)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
 export interface UserState {
   userData: User;
   userID: number;
@@ -105,7 +128,25 @@ const userSlice = createSlice({
     builder.addCase(saveUserID.fulfilled, () => {
       console.log("id saved")
     })
+    builder.addCase(addCookie.fulfilled, (state, action) => {
+      state.userData = action.payload
+      console.log("cart saved")
+    })
+    builder.addCase(clearCart.fulfilled, (state) => {
+      state.userData.cart = []
+      console.log("users cart cleared")
+    })
   },
 })
 
 export default userSlice.reducer
+export const getMemoizedNumItems = createSelector(
+  (state: RootState) => state.user.userData.cart,
+  (items) => {
+    let numItems = 0
+    items.map(item => {
+      numItems += item.count
+    })
+    return numItems
+  }
+)

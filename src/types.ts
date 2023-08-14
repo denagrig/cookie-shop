@@ -40,5 +40,11 @@ type UserDataAndId = {
   userID: number
 }
 
+type AddCookieToUser = {
+  cookieID: number
+  cookieCount: number
+  userID: number
+}
 
-export type { User, UserRegisterData, UserLoginData, CurUserIdAndCart, Cookies, MainPageCookie, UserDataAndId }
+
+export type { User, UserRegisterData, UserLoginData, CurUserIdAndCart, Cookies, MainPageCookie, UserDataAndId, AddCookieToUser }

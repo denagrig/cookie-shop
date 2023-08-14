@@ -7,7 +7,6 @@ import Cart from "./pages/Cart/Cart"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "./store"
 import { loadUser } from "./slices/userSlice"
-import { loadCart } from "./slices/cartSlice"
 import { useAppSelector } from "./hooks"
 import { useEffect } from "react"
 
@@ -19,8 +18,6 @@ function App() {
   }, [])
 
   const userID: number = useAppSelector((state) => state.user.userID)
-
-  if (userID >= 0) dispatch(loadCart(userID))
 
   if(userID != -2)
   {
