@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { getMemoizedNumItems } from "../../slices/cartSlice"
 import { useAppSelector } from "../../hooks"
 import { useDispatch } from "react-redux"
-import { logOut, saveUserID } from "../../slices/userSlice"
+import { logOut } from "../../slices/userSlice"
 import { Center, Container, Input, Left, MenuItem, Right, SearchContainer, Wrapper } from "./Navbar.styled"
 import { AppDispatch } from "../../store"
 import { User } from "../../types"
@@ -13,13 +13,12 @@ import { User } from "../../types"
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
 
-  const allUsers: User[] = useAppSelector((state) => state.user.users)
+  const curUser: User = useAppSelector((state) => state.user.userData)
   const userID: number = useAppSelector((state) => state.user.userID)
 
   const [username, setUsername] = useState("")
   const [isSignedIn, setIsSignedIn] = useState(false)
   const curCookiesCnt = useAppSelector(getMemoizedNumItems)
-  const curUser = allUsers[userID]
 
   useEffect(()=>{
     if (userID != -1) {
@@ -34,7 +33,6 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logOut())
-    dispatch(saveUserID(-1))
   }
 
   return (

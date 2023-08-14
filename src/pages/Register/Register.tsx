@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { register, saveUserID, saveUsers } from "../../slices/userSlice"
+import { register } from "../../slices/userSlice"
 import { useDispatch } from "react-redux"
 import {
   Agreement,
@@ -12,78 +12,77 @@ import {
   Wrapper,
 } from "./Register.styled"
 import { AppDispatch, store } from "../../store"
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
+import {User, UserRegisterData} from "../../types"
 
 const Register = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-  let name = ""
-  let password = ""
-  let confirmPassword = ""
-  let alergens = ""
+  const [userData, setUserData] = useState<UserRegisterData>({
+    name: "", 
+    password: "", 
+    confirmPassword: "", 
+    alergens:""})
 
   const handleRegister = () => {
-    const userData: string[] = []
-    let hasEmptyInput = false
 
-    userData[0] = name
-    userData[1] = password
-    userData[2] = confirmPassword
-    userData[3] = alergens
-
-    if (userData[1] != userData[2]) {
+    if (userData.password != userData.confirmPassword)
       alert("Введенные пароли не совпадают")
-    } else {
-      for (let i = 0; i < 4; i++) {
-        if (userData[i] == "") {
-          hasEmptyInput = true
-          break
-        }
+    else if (userData.name == "" || userData.password == "" || userData.confirmPassword == "")
+      alert("Пожалуйста введите все данные")
+    else {
+      const registerData : User = {
+        name: userData.name,
+        password: userData.password,
+        alergens: userData.alergens.split(","),
+        cart: []
       }
-      if (hasEmptyInput) {
-        alert("Пожалуйста введите все данные")
+
+      dispatch(register(registerData))
+
+      if (store.getState().user.userID == -1) {
+        alert("Такое имя пользователя уже существует")
       } else {
-        dispatch(register(userData))
-        dispatch(saveUsers(store.getState().user.users))
-        dispatch(saveUserID(store.getState().user.userID))
-
-
-        if (store.getState().user.userID == -1) {
-          alert("Такое имя пользователя уже существует")
-        } else {
-          alert("Вы успешно зарегистрировны")
-          navigate("/home")
-        }
+        alert("Вы успешно зарегистрировны")
+        navigate("/home")
       }
     }
   }
 
   const handleInputName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      name = event.target.value
+      const newUserData = Object.assign({}, userData)
+      newUserData.name = event.target.value
+      setUserData(newUserData)  
     },
-    []
+    [userData]
   )
 
   const handleInputPassword = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      password = event.target.value
+      const newUserData = Object.assign({}, userData)
+      newUserData.password = event.target.value
+      setUserData(newUserData) 
     },
-    []
+    [userData]
   )
 
   const handleInputConfirmPassword = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      confirmPassword = event.target.value
+      const newUserData = Object.assign({}, userData)
+      newUserData.confirmPassword = event.target.value
+      setUserData(newUserData) 
     },
-    []
+    [userData]
   )
 
   const handleInputAlergens = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      alergens = event.target.value
+      const newUserData = Object.assign({}, userData)
+      newUserData.alergens = event.target.value
+      setUserData(newUserData) 
     },
-    []
+    [userData]
   )
 
   return (

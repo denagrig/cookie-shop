@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit"
-import { Cookies, UserCartData } from "../types"
+import { Cookies, CurUserIdAndCart } from "../types"
 import { RootState } from "../store"
 import { getUserCart, setUserCart } from "./cartLocalStorage"
 
@@ -15,9 +15,9 @@ export const loadCart = createAsyncThunk<Cookies[], number>(
   }
 )
 
-export const saveCart = createAsyncThunk<void, UserCartData>(
+export const saveCart = createAsyncThunk<Cookies[], CurUserIdAndCart>(
   "cartSlice/sace",
-  async (cart: UserCartData, thunkAPI) => {
+  async (cart: CurUserIdAndCart, thunkAPI) => {
     try {
       return await setUserCart(cart)
     } catch (e) {
@@ -70,22 +70,20 @@ const cartSlice = createSlice({
         curCookie++
       })
     },
-    removeAll(state){
-      state.items = []
-    }
   },
   extraReducers: (builder) => {
     builder.addCase(loadCart.fulfilled, (state, action) => {
       state.items = action.payload
       console.log("cart loaded")
     })
-    builder.addCase(saveCart.fulfilled, () => {
+    builder.addCase(saveCart.fulfilled, (state, action) => {
+      state.items = action.payload
       console.log("data saved")
     })
   }
 })
 
-export const { addToCart, removeFromCart, removeAll } = cartSlice.actions
+export const { addToCart, removeFromCart } = cartSlice.actions
 export default cartSlice.reducer
 export const getMemoizedNumItems = createSelector(
   (state: RootState) => state.cart.items,

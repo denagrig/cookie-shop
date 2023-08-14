@@ -3,7 +3,7 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from "@material-ui/icons"
-import { User, UserCartData } from "../../types"
+import { User, CurUserIdAndCart } from "../../types"
 import { addToCart, saveCart } from "../../slices/cartSlice"
 import { useDispatch } from "react-redux"
 import { MainPageCookie } from "../../types"
@@ -32,7 +32,7 @@ const Product = ({ item }: { item : MainPageCookie}) => {
       )
     } else {
       dispatch(addToCart(item.id))
-      const userCartData: UserCartData = {
+      const userCartData: CurUserIdAndCart = {
         id: parseInt(userID),
         cart: store.getState().cart.items
       }

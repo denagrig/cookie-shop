@@ -1,35 +1,24 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { logIn, saveUserID } from "../../slices/userSlice"
+import { logIn } from "../../slices/userSlice"
 import {Container, Wrapper, Title, Form, Input, Button, LinkContainer} from "./Login.styled"
 import { AppDispatch, store } from "../../store"
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
+import { UserLoginData } from "../../types"
 
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-  let name = ""
-  let password = ""
+  const [userData, setUserData] = useState<UserLoginData>({
+    name: "", 
+    password: ""})
 
   const handleLogin = () => {
-    const userData:string[] = []
-    let hasEmptyInput = false
-    
-    userData[0] = name
-    userData[1] = password
-
-    userData.map((input) => {
-      if (input == "") {
-        hasEmptyInput = true
-      }
-    })
-
-    if (hasEmptyInput) {
+    if (userData.name == "" || userData.password == "") {
       alert("Пожалуйста введите все данные")
     } else {
       dispatch(logIn(userData))
-      dispatch(saveUserID(store.getState().user.userID))
-
+      
       if(store.getState().user.userID != -1){
         navigate("/home")
       } else { 
@@ -39,12 +28,16 @@ const Login = () => {
   }
 
   const handleInputName = useCallback((event : React.ChangeEvent<HTMLInputElement>) => {
-    name = event.target.value
-  }, [])
+    const newUserData = Object.assign({}, userData)
+    newUserData.name = event.target.value
+    setUserData(newUserData)  
+  }, [userData])
 
   const handleInputPassword = useCallback((event : React.ChangeEvent<HTMLInputElement>) => {
-    password = event.target.value
-  }, [])
+    const newUserData = Object.assign({}, userData)
+    newUserData.password = event.target.value
+    setUserData(newUserData)  
+  }, [userData])
 
   return (
     <Container>

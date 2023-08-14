@@ -3,7 +3,7 @@ type Cookies = {
   count: number
 }
 
-type UserCartData = {
+type CurUserIdAndCart = {
   id: number,
   cart: Cookies[]
 }
@@ -11,8 +11,20 @@ type UserCartData = {
 type User = {
   name: string
   password: string
-  cookies: Cookies[]
+  cart: Cookies[]
   alergens: string[]
+}
+
+type UserRegisterData = {
+  name: string
+  password: string
+  confirmPassword: string
+  alergens: string
+}
+
+type UserLoginData = {
+  name?: string
+  password?: string
 }
 
 type MainPageCookie = {
@@ -23,4 +35,10 @@ type MainPageCookie = {
   price: string
 }
 
-export type { User, UserCartData, Cookies, MainPageCookie }
+type UserDataAndId = {
+  user: User
+  userID: number
+}
+
+
+export type { User, UserRegisterData, UserLoginData, CurUserIdAndCart, Cookies, MainPageCookie, UserDataAndId }
