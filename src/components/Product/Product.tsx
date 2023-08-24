@@ -3,22 +3,29 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from "@material-ui/icons"
-import { User, AddCookieToUser} from "../../types"
+import { User, AddCookieToUser, MainPageCookie } from "@src/types"
 import { useDispatch } from "react-redux"
-import { MainPageCookie } from "../../types"
-import { Alergic, CookieName, CookiePrice, Image, Info, Icon} from "./Product.styled"
-import { AppDispatch } from "../../store"
-import { addCookie } from "../../slices/userSlice"
+import {
+  Alergic,
+  CookieName,
+  CookiePrice,
+  Image,
+  Info,
+  Icon,
+} from "@components/Product/Product.styled"
+import { AppDispatch } from "@src/store"
+import { addCookie } from "@slices/userSlice"
+import { useAppSelector } from "@src/hooks"
+import { UserStatus } from "@src/data"
 
-const Product = ({ item }: { item : MainPageCookie}) => {
+const Product = ({ item }: { item: MainPageCookie }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const allUsers: User[] = JSON.parse(localStorage.getItem("allUsers") || "[]")
-  const userID: string = JSON.parse(localStorage.getItem("userID") || "-1")
-  const curUser: User = allUsers[parseInt(userID)]
+  const curUser: User = useAppSelector((state) => state.user.userData)
+  const userID: number = useAppSelector((state) => state.user.userID)
   let isAlergic: boolean
   let color = "lightGrey"
 
-  if (parseInt(userID) != -1) {
+  if (userID != UserStatus.LogedOut) {
     isAlergic = curUser.alergens.some((r) => item.alergens.includes(r))
     if (curUser.alergens.some((r) => item.alergens.includes(r))) {
       color = "lightRed"
@@ -32,9 +39,9 @@ const Product = ({ item }: { item : MainPageCookie}) => {
       )
     } else {
       const addCookieToUser: AddCookieToUser = {
-        userID: parseInt(userID),
+        userID: userID,
         cookieID: item.id,
-        cookieCount: 1
+        cookieCount: 1,
       }
       dispatch(addCookie(addCookieToUser))
     }

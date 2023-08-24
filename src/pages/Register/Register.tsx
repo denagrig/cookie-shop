@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { register } from "../../slices/userSlice"
+import { register } from "@slices/userSlice"
 import { useDispatch } from "react-redux"
 import {
   Agreement,
@@ -11,49 +11,52 @@ import {
   Title,
   Wrapper,
 } from "./Register.styled"
-import { AppDispatch, store } from "../../store"
-import React, { useCallback, useState } from "react"
-import {User, UserRegisterData} from "../../types"
+import { AppDispatch } from "@src/store"
+import React, { useCallback, useEffect, useState } from "react"
+import { User, UserRegisterData } from "@src/types"
+import { useAppSelector } from "@src/hooks"
 
 const Register = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
+  const curUserID: number = useAppSelector((state) => state.user.userID)
   const [userData, setUserData] = useState<UserRegisterData>({
-    name: "", 
-    password: "", 
-    confirmPassword: "", 
-    alergens:""})
+    name: "",
+    password: "",
+    confirmPassword: "",
+    alergens: "",
+  })
 
   const handleRegister = () => {
-
     if (userData.password != userData.confirmPassword)
       alert("Введенные пароли не совпадают")
-    else if (userData.name == "" || userData.password == "" || userData.confirmPassword == "")
+    else if (
+      userData.name == "" ||
+      userData.password == "" ||
+      userData.confirmPassword == ""
+    )
       alert("Пожалуйста введите все данные")
     else {
-      const registerData : User = {
+      const registerData: User = {
         name: userData.name,
         password: userData.password,
         alergens: userData.alergens.split(","),
-        cart: []
+        cart: [],
       }
 
       dispatch(register(registerData))
-
-      if (store.getState().user.userID == -1) {
-        alert("Такое имя пользователя уже существует")
-      } else {
-        alert("Вы успешно зарегистрировны")
-        navigate("/home")
-      }
     }
   }
+
+  useEffect(() => {
+    if (curUserID != -1) navigate("/home")
+  }, [dispatch])
 
   const handleInputName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newUserData = Object.assign({}, userData)
       newUserData.name = event.target.value
-      setUserData(newUserData)  
+      setUserData(newUserData)
     },
     [userData]
   )
@@ -62,7 +65,7 @@ const Register = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newUserData = Object.assign({}, userData)
       newUserData.password = event.target.value
-      setUserData(newUserData) 
+      setUserData(newUserData)
     },
     [userData]
   )
@@ -71,7 +74,7 @@ const Register = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newUserData = Object.assign({}, userData)
       newUserData.confirmPassword = event.target.value
-      setUserData(newUserData) 
+      setUserData(newUserData)
     },
     [userData]
   )
@@ -80,7 +83,7 @@ const Register = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newUserData = Object.assign({}, userData)
       newUserData.alergens = event.target.value
-      setUserData(newUserData) 
+      setUserData(newUserData)
     },
     [userData]
   )

@@ -1,7 +1,20 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
-import { UserLoginData, User, UserDataAndId, AddCookieToUser } from "../types"
-import { getUser, setUserID, registerUser, logInUser, logOutUser, setUserCart, clearUserCart } from "./userLocalStorage"
-import { RootState } from "../store"
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit"
+import { UserLoginData, User, UserDataAndId, AddCookieToUser } from "@src/types"
+import {
+  getUser,
+  setUserID,
+  registerUser,
+  logInUser,
+  logOutUser,
+  setUserCart,
+  clearUserCart,
+} from "@slices/userLocalStorage"
+import { RootState } from "@src/store"
+import { UserStatus } from "@src/data"
 
 export const loadUser = createAsyncThunk<UserDataAndId, void>(
   "userSlice/loadUser",
@@ -86,7 +99,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  userData: {name: "", password: "", cart: [], alergens: []}, 
+  userData: { name: "", password: "", cart: [], alergens: [] },
   userID: -2,
 }
 
@@ -95,7 +108,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logOut(state) {
-      state.userID = -1
+      state.userID = UserStatus.LogedOut
     },
   },
   extraReducers: (builder) => {
@@ -105,24 +118,22 @@ const userSlice = createSlice({
       console.log("user loaded")
     })
     builder.addCase(register.fulfilled, (state, action) => {
-      if(action.payload.userID != -1)
-      {
+      if (action.payload.userID != UserStatus.LogedOut) {
         state.userData = action.payload.user
         state.userID = action.payload.userID
       }
       console.log("user registred")
     })
     builder.addCase(logIn.fulfilled, (state, action) => {
-      if(action.payload.userID != -1)
-      {
+      if (action.payload.userID != UserStatus.LogedOut) {
         state.userData = action.payload.user
         state.userID = action.payload.userID
       }
       console.log("user logedIn")
     })
     builder.addCase(logOut.fulfilled, (state) => {
-      state.userData = {name: "", password: "", cart: [], alergens: []},
-      state.userID = -1
+      (state.userData = { name: "", password: "", cart: [], alergens: [] }),
+      (state.userID = UserStatus.LogedOut)
       console.log("user logedOut")
     })
     builder.addCase(saveUserID.fulfilled, () => {
@@ -144,7 +155,7 @@ export const getMemoizedNumItems = createSelector(
   (state: RootState) => state.user.userData.cart,
   (items) => {
     let numItems = 0
-    items.map(item => {
+    items.map((item) => {
       numItems += item.count
     })
     return numItems

@@ -1,6 +1,8 @@
 import cookie from "../src/assets/cookie.png"
 import { MainPageCookie } from "./types"
 
+export const UserStatus = { LogedOut: -1, UsersArrayNotLoaded:-2 }
+
 export const cookiesRecord : Record <number, MainPageCookie>= {
   1:
   {

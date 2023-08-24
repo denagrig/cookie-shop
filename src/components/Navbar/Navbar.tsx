@@ -1,38 +1,56 @@
 import { Badge } from "@material-ui/core"
 import { Search, ShoppingCartOutlined } from "@material-ui/icons"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { getMemoizedNumItems } from "../../slices/userSlice"
-import { useAppSelector } from "../../hooks"
+import { getMemoizedNumItems, logOut } from "@slices/userSlice"
+import { useAppSelector } from "@src/hooks"
 import { useDispatch } from "react-redux"
-import { logOut } from "../../slices/userSlice"
-import { Center, Container, Input, Left, MenuItem, Right, SearchContainer, Wrapper } from "./Navbar.styled"
-import { AppDispatch } from "../../store"
-import { User } from "../../types"
+import {
+  Center,
+  Container,
+  Input,
+  Left,
+  MenuItem,
+  Right,
+  SearchContainer,
+  Wrapper,
+} from "./Navbar.styled"
+import { AppDispatch } from "@src/store"
+import { User } from "@src/types"
+import { UserStatus } from "@src/data"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
-
-  const curUser: User = useAppSelector((state) => state.user.userData)
-  const userID: number = useAppSelector((state) => state.user.userID)
-
+  const navigate = useNavigate()
   const [username, setUsername] = useState("")
   const [isSignedIn, setIsSignedIn] = useState(false)
+  const curUser: User = useAppSelector((state) => state.user.userData)
+  const userID: number = useAppSelector((state) => state.user.userID)
   const curCookiesCnt = useAppSelector(getMemoizedNumItems)
 
-  useEffect(()=>{
-    if (userID != -1) {
+  useEffect(() => {
+    if (userID != UserStatus.LogedOut) {
       setIsSignedIn(true)
       setUsername(curUser.name)
-    }
-    else {
+    } else {
       setIsSignedIn(false)
     }
   }, [userID])
-  
 
   const handleLogout = () => {
     dispatch(logOut())
+  }
+
+  const moveToCart = () => {
+    navigate("/cart")
+  }
+
+  const moveToLogin = () => {
+    navigate("/login")
+  }
+
+  const moveToRegister = () => {
+    navigate("/register")
   }
 
   return (
@@ -41,7 +59,7 @@ const Navbar = () => {
         <Left>
           <SearchContainer>
             <Input placeholder="название товара" />
-            <Search style={{ color: "gray", fontSize: 16 }} />
+            <Search />
           </SearchContainer>
         </Left>
         <Center>
@@ -54,35 +72,16 @@ const Navbar = () => {
               <MenuItem id="logout" onClick={handleLogout}>
                 ВЫЙТИ
               </MenuItem>
-              <MenuItem>
-                <Link
-                  to="/cart"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <Badge badgeContent={curCookiesCnt} color="primary">
-                    <ShoppingCartOutlined />
-                  </Badge>
-                </Link>
+              <MenuItem onClick={moveToCart}>
+                <Badge badgeContent={curCookiesCnt} color="primary">
+                  <ShoppingCartOutlined />
+                </Badge>
               </MenuItem>
             </>
           ) : (
             <>
-              <MenuItem>
-                <Link
-                  to="/register"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  РЕГИСТРАЦИЯ
-                </Link>
-              </MenuItem>
-              <MenuItem>
-                <Link
-                  to="/login"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  ВОЙТИ
-                </Link>
-              </MenuItem>
+              <MenuItem onClick={moveToRegister}>РЕГИСТРАЦИЯ</MenuItem>
+              <MenuItem onClick={moveToLogin}>ВОЙТИ</MenuItem>
             </>
           )}
         </Right>

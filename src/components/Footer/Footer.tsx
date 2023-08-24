@@ -8,7 +8,19 @@ import {
   Twitter,
 } from "@material-ui/icons"
 
-import {Container, Left, Logo, Desc, SocialContainer, SocialIcon, Center, Right, Title, ContactItem, Payment} from "./Footer.styled"
+import {
+  Container,
+  Left,
+  Logo,
+  Desc,
+  SocialContainer,
+  SocialIcon,
+  Center,
+  Right,
+  Title,
+  ContactItem,
+  Payment,
+} from "@components/Footer/Footer.styled"
 
 const Footer = () => {
   return (

@@ -1,14 +1,15 @@
-import Login from "./pages/Login/Login"
-import Register from "./pages/Register/Register"
-import Home from "./pages/Home"
+import Login from "@pages/Login/Login"
+import Register from "@pages/Register/Register"
+import Home from "@pages/Home"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Admin from "./pages/Admin/Admin"
-import Cart from "./pages/Cart/Cart"
+import Admin from "@pages/Admin/Admin"
+import Cart from "@pages/Cart/Cart"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "./store"
-import { loadUser } from "./slices/userSlice"
-import { useAppSelector } from "./hooks"
+import { AppDispatch } from "@src/store"
+import { loadUser } from "@src/slices/userSlice"
+import { useAppSelector } from "@src/hooks"
 import { useEffect } from "react"
+import { UserStatus } from "@src/data"
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
@@ -19,7 +20,7 @@ function App() {
 
   const userID: number = useAppSelector((state) => state.user.userID)
 
-  if(userID != -2)
+  if(userID != UserStatus.UsersArrayNotLoaded)
   {
     return (
       <BrowserRouter>

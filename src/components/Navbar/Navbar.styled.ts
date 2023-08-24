@@ -22,6 +22,8 @@ export const SearchContainer = styled.div`
   align-items: center;
   margin-left: 25px;
   padding: 5px;
+  color: "gray";
+  fontsize: 16;
 `
 
 export const Input = styled.input`

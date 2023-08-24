@@ -28,8 +28,9 @@ export const Alergic = styled.div`
   position: relative;
   &:hover ${Info} {
     opacity: 1;
-  }  
-  background-color: ${props => props.color === "lightRed" ? "#FFCCCB" : "F5FBFD"}
+  }
+  background-color: ${(props) =>
+    props.color === "lightRed" ? "#FFCCCB" : "F5FBFD"};
 `
 
 export const Image = styled.img`
