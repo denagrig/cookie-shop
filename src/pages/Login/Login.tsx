@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { logIn } from "@slices/userSlice"
+import { logIn } from "@src/slices/userSlice"
 import {
   Container,
   Wrapper,
@@ -9,16 +9,18 @@ import {
   Input,
   Button,
   LinkContainer,
-} from "./Login.styled"
+} from "@src/pages/Login/Login.styled"
 import { AppDispatch } from "@src/store"
 import React, { useCallback, useEffect, useState } from "react"
 import { UserLoginData } from "@src/types"
 import { useAppSelector } from "@src/hooks"
+import { removeError } from "@src/slices/errorSlice"
 
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const curUserID: number = useAppSelector((state) => state.user.userID)
+  const dataHasErors: boolean = useAppSelector((state) => state.userDataError.hasErrorInUserData)
   const [userData, setUserData] = useState<UserLoginData>({
     name: "",
     password: "",
@@ -33,8 +35,12 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (curUserID != -1) navigate("/home")
-  }, [dispatch])
+    if(dataHasErors) {
+      alert("Введены неверные данные!")
+      dispatch(removeError())
+    }
+    else if (curUserID != -1) navigate("/home")
+  }, [curUserID, dataHasErors])
 
   const handleInputName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

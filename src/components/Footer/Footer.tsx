@@ -20,7 +20,7 @@ import {
   Title,
   ContactItem,
   Payment,
-} from "@components/Footer/Footer.styled"
+} from "@src/components/Footer/Footer.styled"
 
 const Footer = () => {
   return (

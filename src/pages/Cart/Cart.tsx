@@ -15,10 +15,10 @@ import {
   Text,
   Count,
   Button,
-} from "@pages/Cart/Cart.styled"
+} from "@src/pages/Cart/Cart.styled"
 import { AddCookieToUser, Cookies } from "@src/types"
 import { AppDispatch } from "@src/store"
-import { addCookie, clearCart } from "@slices/userSlice"
+import { addCookie, clearCart } from "@src/slices/userSlice"
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>()

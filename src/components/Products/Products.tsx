@@ -1,6 +1,6 @@
 import { cookiesRecord } from "@src/data"
-import Product from "@components/Product/Product"
-import { Container } from "@components/Products/Products.styled"
+import Product from "@src/components/Product/Product"
+import { Container } from "@src/components/Products/Products.styled"
 
 const Products = () => {
   return (

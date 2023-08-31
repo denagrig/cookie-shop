@@ -1,4 +1,4 @@
-import {Container, Wrapper, Title, Form, Button} from "@pages/Admin/Admin.styled"
+import {Container, Wrapper, Title, Form, Button} from "@src/pages/Admin/Admin.styled"
 
 const Login = () => {
   const handleDelete = () => {

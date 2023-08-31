@@ -12,7 +12,7 @@ import {
   logOutUser,
   setUserCart,
   clearUserCart,
-} from "@slices/userLocalStorage"
+} from "@src/slices/userLocalStorage"
 import { RootState } from "@src/store"
 import { UserStatus } from "@src/data"
 
@@ -100,16 +100,13 @@ export interface UserState {
 
 const initialState: UserState = {
   userData: { name: "", password: "", cart: [], alergens: [] },
-  userID: -2,
+  userID: UserStatus.UsersArrayNotLoaded,
 }
 
 const userSlice = createSlice({
   name: "userSlice",
   initialState,
   reducers: {
-    logOut(state) {
-      state.userID = UserStatus.LogedOut
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadUser.fulfilled, (state, action) => {

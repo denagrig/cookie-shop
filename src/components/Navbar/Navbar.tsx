@@ -2,7 +2,7 @@ import { Badge } from "@material-ui/core"
 import { Search, ShoppingCartOutlined } from "@material-ui/icons"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { getMemoizedNumItems, logOut } from "@slices/userSlice"
+import { getMemoizedNumItems, logOut } from "@src/slices/userSlice"
 import { useAppSelector } from "@src/hooks"
 import { useDispatch } from "react-redux"
 import {
@@ -14,7 +14,7 @@ import {
   Right,
   SearchContainer,
   Wrapper,
-} from "./Navbar.styled"
+} from "@src/components/Navbar/Navbar.styled"
 import { AppDispatch } from "@src/store"
 import { User } from "@src/types"
 import { UserStatus } from "@src/data"

@@ -12,9 +12,9 @@ import {
   Image,
   Info,
   Icon,
-} from "@components/Product/Product.styled"
+} from "@src/components/Product/Product.styled"
 import { AppDispatch } from "@src/store"
-import { addCookie } from "@slices/userSlice"
+import { addCookie } from "@src/slices/userSlice"
 import { useAppSelector } from "@src/hooks"
 import { UserStatus } from "@src/data"
 

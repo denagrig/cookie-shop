@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
-import { register } from "@slices/userSlice"
+import { register } from "@src/slices/userSlice"
+import { removeError } from "@src/slices/errorSlice"
 import { useDispatch } from "react-redux"
 import {
   Agreement,
@@ -10,7 +11,7 @@ import {
   LinkContainer,
   Title,
   Wrapper,
-} from "./Register.styled"
+} from "@src/pages/Register/Register.styled"
 import { AppDispatch } from "@src/store"
 import React, { useCallback, useEffect, useState } from "react"
 import { User, UserRegisterData } from "@src/types"
@@ -20,6 +21,7 @@ const Register = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const curUserID: number = useAppSelector((state) => state.user.userID)
+  const dataHasErors: boolean = useAppSelector((state) => state.userDataError.hasErrorInUserData)
   const [userData, setUserData] = useState<UserRegisterData>({
     name: "",
     password: "",
@@ -49,8 +51,12 @@ const Register = () => {
   }
 
   useEffect(() => {
-    if (curUserID != -1) navigate("/home")
-  }, [dispatch])
+    if(dataHasErors) {
+      alert("Такое имя пользователя уже существует")
+      dispatch(removeError())
+    }
+    else if (curUserID != -1) navigate("/home")
+  }, [curUserID, dataHasErors])
 
   const handleInputName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
-import userReducer from "./slices/userSlice"
+import userReducer from "@src/slices/userSlice"
+import errorReducer from "@src/slices/errorSlice"
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    userDataError: errorReducer,
   },
 })
 
